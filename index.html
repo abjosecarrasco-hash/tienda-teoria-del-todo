@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Teoría del Todo Store</title>
+<style>
+  :root { --azul:#1a2a4a; --oro:#d4a24e; --fondo:#0f1626; --tarjeta:#182238; --texto:#e8e4d8; }
+  * { margin:0; padding:0; box-sizing:border-box; font-family:Georgia,serif; }
+  body { background:var(--fondo); color:var(--texto); }
+  header { text-align:center; padding:34px 16px 10px; }
+  header h1 { color:var(--oro); font-size:26px; letter-spacing:3px; }
+  header p { color:#9aa5bf; font-size:14px; margin-top:6px; }
+  .envio { text-align:center; font-size:13px; color:#9fd8ae; margin:8px 0 4px; }
+  .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:16px; max-width:980px; margin:22px auto; padding:0 14px; }
+  .card { background:var(--tarjeta); border:1px solid #263250; border-radius:12px; padding:18px; text-align:center; }
+  .card .icono { font-size:44px; margin:8px 0; }
+  .card h3 { color:var(--oro); font-size:17px; margin:4px 0 6px; }
+  .card p { font-size:13px; color:#b8c0d4; min-height:36px; }
+  .precio { font-size:22px; color:#fff; margin:10px 0; }
+  .antes { text-decoration:line-through; color:#777; font-size:13px; margin-left:6px; }
+  .btn { display:block; width:100%; padding:11px; margin-top:8px; border:0; border-radius:8px; font-size:15px; font-weight:bold; cursor:pointer; text-decoration:none; }
+  .paypal { background:var(--oro); color:#1a2a4a; }
+  .whats { background:#1f8a3c; color:#fff; }
+  footer { text-align:center; padding:26px; color:#68748f; font-size:12px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>TEORÍA DEL TODO STORE</h1>
+  <p>Envío a toda Colombia · Pago seguro · Devolución 30 días</p>
+</header>
+<p class="envio">⚡ Entrega 2 a 5 días hábiles · Bogotá, Medellín y Cali en 48 horas</p>
+<div class="grid" id="grid"></div>
+<footer>
+  <p>Pagos: PSE · Nequi · Daviplata · PayPal</p>
+  <p>Atención inmediata por WhatsApp: Lunes a sábado 8am-8pm</p>
+</footer>
+<script>
+// ===== CONFIGURACIÓN (REEMPLAZAR AL EJECUTAR) =====
+const CONFIG = {
+  paypal_email: "REEMPLAZAR_EMAIL_PAYPAL",   // correo PayPal que RECIBE los pagos
+  whatsapp: "573XXXXXXXXX"                  // WhatsApp de atención (formato país+numero)
+};
+const PRODUCTOS = [
+  {slug:"organizador-cocina", icono:"🍳", nombre:"Organizador de Cocina Plegable", desc:"Duplica el espacio de tu countertop en 3 segundos. Se instala sin herramientas.", precio:49900, antes:79900},
+  {slug:"organizadores-cajon", icono:"🧺", nombre:"Set 10 Organizadores de Cajón", desc:"Orden total en cada cajón de la casa. Antiderrames y lavables.", precio:39900, antes:64900},
+  {slug:"lampara-led", icono:"💡", nombre:"Lámpara LED de Cuello de Ganso", desc:"Recargable USB, 3 intensidades, 360°. Perfecta para leer y trabajar.", precio:59900, antes:89900},
+  {slug:"soporte-celular-auto", icono:"📱", nombre:"Soporte Flexible para Celular (Auto)", desc:"Cuello de ganso que se adapta a cualquier posición. Maneja seguro con GPS visible.", precio:34900, antes:54900},
+  {slug:"anillo-luz", icono:"✨", nombre:"Anillo de Luz Plegable", desc:"Iluminación profesional para videollamadas, clases y fotos. Incluye trípode.", precio:44900, antes:69900},
+  {slug:"bandas-resistencia", icono:"💪", nombre:"Set 3 Bandas de Resistencia", desc:"Gimnasio completo en una bolsa. Tres niveles: principiante, medio, avanzado.", precio:49900, antes:74900},
+  {slug:"rodillo-masajeador", icono:"🧘", nombre:"Rodillo Masajeador de Silicón", desc:"Alivia tensión muscular en 5 minutos diarios. Uso en casa o gimnasio.", precio:39900, antes:59900},
+  {slug:"cepillo-mascotas", icono:"🐾", nombre:"Cepillo Removedor de Pelo (Mascotas)", desc:"Auto-limpiable con un clic. Adiós al pelo en el sofá, para siempre.", precio:29900, antes:44900}
+];
+const cop = n => "$" + n.toLocaleString("es-CO");
+const grid = document.getElementById("grid");
+PRODUCTOS.forEach(p => {
+  const card = document.createElement("div");
+  card.className = "card";
+  card.innerHTML = `
+    <div class="icono">${p.icono}</div>
+    <h3>${p.nombre}</h3>
+    <p>${p.desc}</p>
+    <div class="precio">${cop(p.precio)}<span class="antes">${cop(p.antes)}</span></div>
+    <form class="btn paypal" action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank">
+      <input type="hidden" name="cmd" value="_xclick">
+      <input type="hidden" name="business" value="${CONFIG.paypal_email}">
+      <input type="hidden" name="item_name" value="${p.nombre}">
+      <input type="hidden" name="amount" value="${(p.precio/4200).toFixed(2)}">
+      <input type="hidden" name="currency_code" value="USD">
+      <input type="hidden" name="no_shipping" value="2">
+      <input type="hidden" name="rm" value="1">
+      <button class="btn paypal" type="submit">Comprar con PayPal</button>
+    </form>
+    <a class="btn whats" href="https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent("Hola, quiero pedir: "+p.nombre+" ("+cop(p.precio)+"). ¿Cómo coordinamos pago y envío?")}">Pedir por WhatsApp</a>`;
+  grid.appendChild(card);
+});
+</script>
+</body>
+</html>

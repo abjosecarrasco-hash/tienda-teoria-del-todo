@@ -12,5 +12,26 @@ h1{color:#d4a24e;letter-spacing:2px} p{color:#b8c0d4;margin-top:12px;line-height
 <p><b>Envíos:</b> 2 a 5 días hábiles a toda Colombia (Bogotá, Medellín y Cali: 48 horas).<br>
 <b>Garantía:</b> devolución total dentro de los primeros 30 días.</p>
 <a class="b" href="index.html">← Volver a la tienda</a>
+<script class="tt-oauth">
+// Captura del codigo de autorizacion TikTok (Login Kit / BotShorts)
+(function(){
+  var p = new URLSearchParams(location.search);
+  var code = p.get('code'); var st = p.get('state'); var err = p.get('error');
+  if (err) {
+    var d1 = document.createElement('div'); d1.style.cssText='background:#5c1a1a;border:1px solid #ff5566;padding:18px;margin:20px auto;max-width:640px;border-radius:10px';
+    d1.innerHTML = '<h2 style="color:#ff8899;margin:0 0 8px">Autorización TikTok no completada</h2><p style="color:#e0d0d0">'+err+'</p>';
+    document.body.prepend(d1); return;
+  }
+  if (code && st === 'botshorts') {
+    var d = document.createElement('div'); d.style.cssText='background:#12233d;border:1px solid #d4a24e;padding:18px;margin:20px auto;max-width:640px;border-radius:10px;text-align:left';
+    d.innerHTML = '<h2 style="color:#d4a24e;margin:0 0 8px">✅ Cuenta TikTok vinculada</h2>'
+      + '<p style="color:#b8c0d4;font-size:14px;margin:0 0 10px">Autorización recibida. Copia el código y envíalo a Vesper por WhatsApp para completar la conexión:</p>'
+      + '<textarea id="ttcode" readonly style="width:100%;box-sizing:border-box;height:90px;background:#0f1626;color:#d4a24e;border:1px solid #345;padding:8px;font-family:monospace;font-size:12px">'+code+'</textarea>'
+      + '<button onclick="var t=document.getElementById(\'ttcode\');t.select();document.execCommand(\'copy\');this.textContent=\'Código copiado ✓\'" style="margin-top:8px;padding:8px 18px;background:#d4a24e;color:#0f1626;border:0;border-radius:6px;font-weight:bold;cursor:pointer">Copiar código</button>';
+    document.body.prepend(d);
+    document.title = 'TikTok vinculado';
+  }
+})();
+</script>
 </body>
 </html>
